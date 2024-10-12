@@ -31,12 +31,15 @@ public class EventoTerminaProcesamiento extends Evento {
         
         EstadoDelSistemaKiosco estadoKiosco = (EstadoDelSistemaKiosco) modelo; // Correcto cast a EstadoDelSistemaKiosco
         contadoresEjemplo.agregarBeneficios(estadoKiosco.getBeneficios()); //medio fulero pq se va actualizando siempre
+        
         // Aquí se registran métricas
         double tiempoServicio = cliente.getTiempoServicio();
         estadoKiosco.clienteAtendido(cliente, tiempoServicio, cliente.getTipoServicio().getCosto(), cliente.getTipoServicio().getPrecioVenta());
-        
+        contadoresEjemplo.agregarTiempoTotal(getTiempoDeOcurrencia()-cliente.getTiempoLlegada());
+        //System.out.println(getTiempoDeOcurrencia()-cliente.getTiempoLlegada());
         // Liberar al empleado y actualizar estado
         empleado.liberar(tiempoServicio);
+        
 
         // Si hay clientes en espera, deberán ser atendidos
         if (estadoKiosco.getColaClientes().size() > 0) {
@@ -48,14 +51,18 @@ public class EventoTerminaProcesamiento extends Evento {
             double tiempoAdicional = calcularTiempoAdicional(siguienteCliente);
             double tiempoTotalServicio = tiempoServicioBase + tiempoAdicional;
             siguienteCliente.setTiempoServicio(tiempoTotalServicio);
+            
 
             // Programar el nuevo evento
             EventoTerminaProcesamiento nuevoEvento = new EventoTerminaProcesamiento(getTiempoDeOcurrencia() + tiempoTotalServicio, empleado, siguienteCliente);
             eventos.agregar(nuevoEvento);
+            
         } else {
             empleado.liberar(tiempoServicio); // Asegurarse de liberar si no hay más clientes
             estadoKiosco.actualizarServidorDisponible();
+            
         }
+        
     }
 
     private double calcularTiempoAdicional(Cliente cliente) {

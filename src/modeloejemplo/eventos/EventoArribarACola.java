@@ -4,6 +4,7 @@ import des.ContadoresEstadisticos;
 import des.EstadoDelSistema;
 import des.Evento;
 import des.ListaDeEventos;
+import des.RelojDeSimulacion;
 import kiosko.Cliente;
 import kiosko.Empleado;
 import kiosko.EstadoDelSistemaKiosco;

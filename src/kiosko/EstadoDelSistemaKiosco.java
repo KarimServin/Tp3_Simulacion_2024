@@ -2,6 +2,7 @@ package kiosko;
 import java.util.Queue;
 
 import des.EstadoDelSistema;
+import des.RelojDeSimulacion;
 
 import java.util.LinkedList;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class EstadoDelSistemaKiosco extends EstadoDelSistema {
     }
 
     public void encolarCliente(Cliente cliente) {
+        
         colaClientes.add(cliente);
     }
     

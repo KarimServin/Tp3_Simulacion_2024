@@ -5,6 +5,7 @@ public class Cliente {
     private int cantidadArticulos;
     private double tiempoLlegada;
     private double tiempoServicio;
+    private double tiempoEspera; 
 
     public Cliente(TipoServicio tipoServicio, int cantidadArticulos, double tiempoLlegada) {
         this.tipoServicio = tipoServicio;
@@ -32,4 +33,14 @@ public class Cliente {
     public void setTiempoServicio(double tiempoServicio) {
         this.tiempoServicio = tiempoServicio;
     }
+    
+    public double getTiempoEspera() {
+        return tiempoEspera;
+    }
+
+    public void setTiempoEspera(double tiempoEspera) {
+        this.tiempoEspera = tiempoEspera;
+    }
+    
+    
 }
