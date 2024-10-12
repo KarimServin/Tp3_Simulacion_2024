@@ -59,7 +59,7 @@ public class EventoTerminaProcesamiento extends Evento {
             
         } else {
             empleado.liberar(tiempoServicio); // Asegurarse de liberar si no hay más clientes
-            estadoKiosco.actualizarServidorDisponible();
+            estadoKiosco.actualizarServidorDisponible(tiempoServicio);
             
         }
         

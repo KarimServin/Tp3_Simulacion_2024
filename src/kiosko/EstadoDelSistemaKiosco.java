@@ -82,13 +82,13 @@ public class EstadoDelSistemaKiosco extends EstadoDelSistema {
         return colaClientes;  // Este método devuelve la cola de clientes
     }
     
-    public void actualizarServidorDisponible() {
+    public void actualizarServidorDisponible(double tiempoAtendido) {
         // Iterar sobre la lista de empleados
         for (Empleado empleado : empleados) {
             // Si el empleado está ocupado
             if (!empleado.estaLibre()) {
                 // Aquí puedes marcar al empleado como libre
-                empleado.liberar(0); // Liberar al empleado (si es necesario, reiniciar el tiempo de ocupado)
+                empleado.liberar(tiempoAtendido); // Liberar al empleado (si es necesario, reiniciar el tiempo de ocupado)
             }
         }
     }

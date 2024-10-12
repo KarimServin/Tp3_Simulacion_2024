@@ -29,17 +29,22 @@ public enum TipoServicio {
 
     public double getTiempoMedioServicio() {
     	
-        return generarTiempoServicioAleatorio(tiempoMedioServicio);
+        return tiempoMedioServicio; //Antes devolvía un generarTiempoServicioAleatorio
+        
     }
 
     // Método para generar un tiempo de servicio aleatorio basado en la distribución exponencial
-    private double generarTiempoServicioAleatorio(double media) {
+    //private double generarTiempoServicioAleatorio(double media) {
 
-        double u = random.nextDouble(); // Genera número aleatorio entre 0 y 1
-        double LAMBDA = 1 / media;   // Lambda es el inverso de la media
+      //  double u = random.nextDouble(); // Genera número aleatorio entre 0 y 1
+        //double LAMBDA = 1 / media;   // Lambda es el inverso de la media
         //System.out.println(-Math.log(1 - u) / LAMBDA);
         
-        return -Math.log(1 - u) / LAMBDA; // Genera el valor de tiempo aleatorio con distribución exponencial
+       // return -Math.log(1 - u) / LAMBDA; // Genera el valor de tiempo aleatorio con distribución exponencial
+    //}
+    
+    public int getParametroTipo(TipoServicio unTipo) {
+        return (unTipo == TipoServicio.BEBIDAS) ? 1 : 2;
     }
     
     

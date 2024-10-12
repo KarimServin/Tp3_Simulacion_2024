@@ -62,7 +62,7 @@ public class ProgramaPrincipal {
 
     private static void crearComponentesDependientes() {
         // Aquí se crean los componentes específicos del kiosco
-        modelo = new EstadoDelSistemaKiosco(2); // Ajustar el número de empleados
+        modelo = new EstadoDelSistemaKiosco(1); // Ajustar el número de empleados
         contadores = new ContadoresEstadisticosEjemplo();
         reporte = new GeneradorDeReportesEjemplo(modelo);
         libreria = new LibreriaDeRutinasEjemplo();
@@ -70,7 +70,9 @@ public class ProgramaPrincipal {
     }
 
     private static boolean terminoLaSimulacion(RelojDeSimulacion reloj, ContadoresEstadisticos contadores) {
-        // 
+
+  
+    
         // (aquí se establecen 480 minutos para 8 horas)
         return reloj.getValor() >= 480;
     }

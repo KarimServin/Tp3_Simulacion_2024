@@ -26,7 +26,8 @@ public class EventoArribarACola extends Evento {
 	    EstadoDelSistemaKiosco estadoKiosco = (EstadoDelSistemaKiosco) modelo;
 
 	    // Generar nuevo cliente
-	    TipoServicio tipoServicio = libreria.generarNumeroAleatorio() < 0.7 ? TipoServicio.BEBIDAS : TipoServicio.PANADERIA;
+	    TipoServicio tipoServicio = libreria.generarNumeroAleatorioConParametro(3) < 0.7 ? TipoServicio.BEBIDAS : TipoServicio.PANADERIA;
+	    
 	    int cantidadArticulos = (tipoServicio == TipoServicio.BEBIDAS) ? libreria.generarCantidadArticulosBebidas() : libreria.generarCantidadArticulosPanaderia();
 	    Cliente cliente = new Cliente(tipoServicio, cantidadArticulos, getTiempoDeOcurrencia());
 
@@ -41,21 +42,36 @@ public class EventoArribarACola extends Evento {
 	    // Intentar iniciar la atención si hay empleados disponibles
 	    Empleado empleado = estadoKiosco.obtenerEmpleadoLibre();
 	    if (empleado != null) {
+	    	
 	        empleado.atenderCliente(cliente); // Atención al cliente
-	        double tiempoServicioBase = cliente.getTipoServicio().getTiempoMedioServicio();
-	        double tiempoAdicional = calcularTiempoAdicional(cliente);
+	        double tiempoServicioBase = libreria.generarVariableAleatoriaExponencial(getParametroTipo(cliente.getTipoServicio()), cliente.getTipoServicio().getTiempoMedioServicio());
+	        /*
+	         * El tiempo servicio base se calcula en base a una variable exponencial
+	         * Se le pasa el parámetro del tipo, 1-> bebidas, 2-> panaderia
+	         * y el tiempo medio servicio
+	         */
+	        double tiempoAdicional = calcularTiempoAdicional(cliente,tiempoServicioBase);
 	        double tiempoTotalServicio = tiempoServicioBase + tiempoAdicional;
 	        cliente.setTiempoServicio(tiempoTotalServicio);
+	        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + tiempoTotalServicio);
 
 	        // Programar el evento de finalización del procesamiento
 	        EventoTerminaProcesamiento nuevoEventoTermina = new EventoTerminaProcesamiento(getTiempoDeOcurrencia() + tiempoTotalServicio, empleado, cliente);
 	        eventos.agregar(nuevoEventoTermina);
 	    }
+	    
+	    
 	}
 	
-	private double calcularTiempoAdicional(Cliente cliente) {
+	private int getParametroTipo(TipoServicio unTipo) {
+		//Sirve para pasarle a la libreria el tipo de parametro, y asi obtener y modificar la semilla
+		
+		return (unTipo == TipoServicio.BEBIDAS) ? 1 : 2;
+	}
+
+	private double calcularTiempoAdicional(Cliente cliente, double tiempoBase) {
 	    int cantidad = cliente.getCantidadArticulos();
-	    double tiempoBase = cliente.getTipoServicio().getTiempoMedioServicio();
+	    
 
 	    // Calcular el tiempo adicional según el tipo de servicio y la cantidad de artículos
 	    if (cliente.getTipoServicio() == TipoServicio.BEBIDAS) {
