@@ -25,11 +25,16 @@ public class EventoArribarACola extends Evento {
 
 	    EstadoDelSistemaKiosco estadoKiosco = (EstadoDelSistemaKiosco) modelo;
 
-	    // Generar nuevo cliente
+	    
 	    TipoServicio tipoServicio = libreria.generarNumeroAleatorioConParametro(3) < 0.7 ? TipoServicio.BEBIDAS : TipoServicio.PANADERIA;
 	    
 	    int cantidadArticulos = (tipoServicio == TipoServicio.BEBIDAS) ? libreria.generarCantidadArticulosBebidas() : libreria.generarCantidadArticulosPanaderia();
 	    Cliente cliente = new Cliente(tipoServicio, cantidadArticulos, getTiempoDeOcurrencia());
+	    
+	    
+	    double tiempoServicioBase = libreria.generarVariableAleatoriaExponencial(getParametroTipo(cliente.getTipoServicio()), cliente.getTipoServicio().getTiempoMedioServicio());
+	    double tiempoAdicional = calcularTiempoAdicional(cliente,tiempoServicioBase);
+	    cliente.setTiempoServicio(tiempoServicioBase + tiempoAdicional);
 
 	    // Agregar cliente a la cola
 	    estadoKiosco.encolarCliente(cliente);
@@ -44,19 +49,20 @@ public class EventoArribarACola extends Evento {
 	    if (empleado != null) {
 	    	
 	        empleado.atenderCliente(cliente); // Atención al cliente
-	        double tiempoServicioBase = libreria.generarVariableAleatoriaExponencial(getParametroTipo(cliente.getTipoServicio()), cliente.getTipoServicio().getTiempoMedioServicio());
+	        //double tiempoServicioBase = libreria.generarVariableAleatoriaExponencial(getParametroTipo(cliente.getTipoServicio()), cliente.getTipoServicio().getTiempoMedioServicio());
+	       
 	        /*
 	         * El tiempo servicio base se calcula en base a una variable exponencial
 	         * Se le pasa el parámetro del tipo, 1-> bebidas, 2-> panaderia
 	         * y el tiempo medio servicio
 	         */
-	        double tiempoAdicional = calcularTiempoAdicional(cliente,tiempoServicioBase);
-	        double tiempoTotalServicio = tiempoServicioBase + tiempoAdicional;
-	        cliente.setTiempoServicio(tiempoTotalServicio);
-	        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + tiempoTotalServicio);
+	        //double tiempoAdicional = calcularTiempoAdicional(cliente,tiempoServicioBase);
+	        //double tiempoTotalServicio = tiempoServicioBase + tiempoAdicional;
+	        //cliente.setTiempoServicio(tiempoTotalServicio);
+	        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
 	        // Programar el evento de finalización del procesamiento
-	        EventoTerminaProcesamiento nuevoEventoTermina = new EventoTerminaProcesamiento(getTiempoDeOcurrencia() + tiempoTotalServicio, empleado, cliente);
+	        EventoTerminaProcesamiento nuevoEventoTermina = new EventoTerminaProcesamiento(getTiempoDeOcurrencia() + cliente.getTiempoServicio(), empleado, cliente);
 	        eventos.agregar(nuevoEventoTermina);
 	    }
 	    

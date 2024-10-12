@@ -32,45 +32,47 @@ public class EventoTerminaProcesamiento extends Evento {
         EstadoDelSistemaKiosco estadoKiosco = (EstadoDelSistemaKiosco) modelo; // Correcto cast a EstadoDelSistemaKiosco
         contadoresEjemplo.agregarBeneficios(estadoKiosco.getBeneficios()); //medio fulero pq se va actualizando siempre
         
-        // Aquí se registran métricas
+        // Aca se registran métricas
         double tiempoServicio = cliente.getTiempoServicio();
         estadoKiosco.clienteAtendido(cliente, tiempoServicio, cliente.getTipoServicio().getCosto(), cliente.getTipoServicio().getPrecioVenta());
         contadoresEjemplo.agregarTiempoTotal(getTiempoDeOcurrencia()-cliente.getTiempoLlegada());
         //System.out.println(getTiempoDeOcurrencia()-cliente.getTiempoLlegada());
         // Liberar al empleado y actualizar estado
         empleado.liberar(tiempoServicio);
+       
         
-
         // Si hay clientes en espera, deberán ser atendidos
         if (estadoKiosco.getColaClientes().size() > 0) {
             Cliente siguienteCliente = estadoKiosco.desencolarCliente();
             empleado.atenderCliente(siguienteCliente);
 
             // Calcular el tiempo de servicio para el siguiente cliente
-            double tiempoServicioBase = siguienteCliente.getTipoServicio().getTiempoMedioServicio();
-            double tiempoAdicional = calcularTiempoAdicional(siguienteCliente);
-            double tiempoTotalServicio = tiempoServicioBase + tiempoAdicional;
-            siguienteCliente.setTiempoServicio(tiempoTotalServicio);
+            //libreria.generarVariableAleatoriaExponencial(getParametroTipo(cliente.getTipoServicio()), cliente.getTipoServicio().getTiempoMedioServicio());
+            
+            //libreria.generarVariableAleatoriaExponencial(getParametroTipo(siguienteCliente.getTipoServicio()), siguienteCliente.getTipoServicio().getTiempoMedioServicio());
+            //double tiempoServicioBase = libreria.generarVariableAleatoriaExponencial(getParametroTipo(siguienteCliente.getTipoServicio()), siguienteCliente.getTipoServicio().getTiempoMedioServicio());
+            //double tiempoServicioBase = siguienteCliente.getTipoServicio().getTiempoMedioServicio();
+            //double tiempoAdicional = calcularTiempoAdicional(siguienteCliente,tiempoServicioBase);
+            //double tiempoTotalServicio = tiempoServicioBase + tiempoAdicional;
+            //siguienteCliente.setTiempoServicio(tiempoTotalServicio);
             
 
             // Programar el nuevo evento
-            EventoTerminaProcesamiento nuevoEvento = new EventoTerminaProcesamiento(getTiempoDeOcurrencia() + tiempoTotalServicio, empleado, siguienteCliente);
+            EventoTerminaProcesamiento nuevoEvento = new EventoTerminaProcesamiento(getTiempoDeOcurrencia() + siguienteCliente.getTiempoServicio(), empleado, siguienteCliente);
             eventos.agregar(nuevoEvento);
             
         } else {
             empleado.liberar(tiempoServicio); // Asegurarse de liberar si no hay más clientes
             estadoKiosco.actualizarServidorDisponible(tiempoServicio);
-            
         }
         
     }
 
-    private double calcularTiempoAdicional(Cliente cliente) {
-        int cantidad = cliente.getCantidadArticulos();
-        double tiempoBase = cliente.getTipoServicio().getTiempoMedioServicio();
+    /* 
+    private double calcularTiempoAdicional(Cliente cliente,double tiempoBase) {
         
-        
-
+    	int cantidad = cliente.getCantidadArticulos();
+       
         if (cliente.getTipoServicio() == TipoServicio.BEBIDAS) {
             if (cantidad == 2) return 0.1 * tiempoBase;
             if (cantidad == 3) return 0.13 * tiempoBase;
@@ -81,4 +83,10 @@ public class EventoTerminaProcesamiento extends Evento {
         }
         return 0;
     }
-}
+    
+    private int getParametroTipo(TipoServicio unTipo) {
+		//Sirve para pasarle a la libreria el tipo de parametro, y asi obtener y modificar la semilla
+		
+		return (unTipo == TipoServicio.BEBIDAS) ? 1 : 2;
+	} */
+} 

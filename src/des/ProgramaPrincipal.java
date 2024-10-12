@@ -18,7 +18,7 @@ public class ProgramaPrincipal {
 
     public static void main(String[] args) {
 
-        System.out.println(LibreriaDeRutinasEjemplo.generarNumeroAleatorio());
+        
         
         // Creación de los componentes del kiosco.
         crearComponentesDependientes();

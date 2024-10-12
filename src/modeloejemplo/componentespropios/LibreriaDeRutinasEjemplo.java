@@ -91,6 +91,7 @@ public class LibreriaDeRutinasEjemplo extends LibreriaDeRutinas {
         semillas[parametro] = Long.parseLong(digitosCentros);
         
         // Retornamos el número entre 0 y 1
+        System.out.println(semilla / Math.pow(10, cantidadDigitos));
         return (double) semilla / Math.pow(10, cantidadDigitos);
     }
     
